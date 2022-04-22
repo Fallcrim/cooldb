@@ -31,38 +31,7 @@ class Session:
     def conn(self):
         return self.__conn
 
-    # def select_all(self, table_name: str, where: dict[str: str] = None) -> List[Tuple] | None:
-    #     """
-    #     Selects all rows from the given table if it exists
-    #     :param table_name:
-    #     :param where:
-    #     :return:
-    #     """
-    #     if where is not None:
-    #         where = self._validate_params(where)
-    #         self.__c.execute(
-    #             f"SELECT * FROM {table_name} WHERE {' AND '.join(f'{k} = {v}' for k, v in where[0].items()) if where is not None else ''}")
-    #     else:
-    #         self.__c.execute(f"SELECT * FROM {table_name}")
-    #
-    #     return self.__c.fetchall()
-    #
-    # def select_one(self, table_name: str, where: dict[str: str] = None) -> Optional[Tuple]:
-    #     """
-    #     Selects the first element from the given table if exists
-    #     :param table_name:
-    #     :param where:
-    #     :return:
-    #     """
-    #     if where is not None:
-    #         where = self._validate_params(where)
-    #         self.__c.execute(
-    #             f"SELECT * FROM {table_name} WHERE {' AND '.join(f'{k} = {v}' for k, v in where[0].items())}")
-    #     else:
-    #         self.__c.execute(f"SELECT * FROM {table_name}")
-    #     return self.__c.fetchone()
-
-    def select(self, table_name: str, count: int, where: dict[str: str] = None) -> List[Tuple]:
+    def save(self, table_name: str, count: int, where: dict[str: str] = None) -> List[Tuple]:
         """
         Selects the first element from the given table if exists
         :param table_name:
