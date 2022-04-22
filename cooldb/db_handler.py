@@ -31,7 +31,7 @@ class Session:
     def conn(self):
         return self.__conn
 
-    def save(self, table_name: str, count: int, where: dict[str: str] = None) -> List[Tuple]:
+    def select(self, table_name: str, count: int, where: dict[str: str] = None) -> List[Tuple]:
         """
         Selects the first element from the given table if exists
         :param table_name:
@@ -48,7 +48,7 @@ class Session:
             self.__c.execute(f"SELECT * FROM {table_name}")
         return self.__c.fetchmany(count)
 
-    def insert(self, table_name: str, values: List) -> None:
+    def save(self, table_name: str, values: List) -> None:
         """
         Inserts a new row into the given table
         :param table_name:
