@@ -26,5 +26,6 @@ sess.close() # gets executed when something like 'del sess' is called
 
 ## 3. Future
 At the moment I don't know if I will add more features. If you want to see more features please fork this repo und create pull requests or just create an issue with the feature request tag. 
+PS: Maybe I will add an async version that uses aiosqlite but let's see ;)
 
 # CHEERS
