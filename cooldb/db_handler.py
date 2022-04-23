@@ -1,6 +1,6 @@
 import logging
 import sqlite3
-from typing import Iterable, List, Optional, Tuple
+from typing import List, Tuple
 
 
 class Session:
