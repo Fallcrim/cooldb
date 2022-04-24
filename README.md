@@ -1,6 +1,9 @@
 # cooldb
 
-This is a simple wrapper for python's sqlite3 API
+This is a simple wrapper for python's sqlite3 API\
+__DISCLAIMER!!:__
+This library is not intended to be used in production environments because it **IS NOT** protected against SQL
+injection.
 
 ## 1. Explanation
 
