@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '1.0.1'
+VERSION = '2.0.0b1'
 DESCRIPTION = 'A simple database handler for SQLite3'
 LONG_DESCRIPTION = open(os.path.join(here, 'README.md')).read()
 
@@ -20,11 +20,11 @@ setup(
     install_requires=[],
     keywords=['python', 'db', 'database', 'wrapper', 'sqlite3'],
     classifiers=[
-        "Development Status :: 1 - Planning",
+        "Development Status :: 2 - Alpha",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
-    ]
+    ],
 )

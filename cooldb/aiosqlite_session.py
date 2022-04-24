@@ -7,7 +7,7 @@ import aiosqlite
 class AsyncSession:
     def __init__(self, db_name: str):
         self.db_name = db_name + ".db" if db_name[-3:] != ".db" else db_name
-        self.__conn = aiosqlite.connect(self.db_name)
+        self.__conn: None | aiosqlite.Connection = None
 
     async def create_table(self, table_name: str, table_columns: dict[str: str]) -> None | int:
         """
@@ -17,6 +17,7 @@ class AsyncSession:
         :param table_columns:
         :return:
         """
+        self.__conn = await aiosqlite.connect(self.db_name)
         query = f"CREATE TABLE {table_name} ({', '.join(f'{k} {v}' for k, v in table_columns.items())})"
         await self.__conn.execute(query)
         await self.__conn.commit()
@@ -35,6 +36,7 @@ class AsyncSession:
         :param where:
         :return:
         """
+        self.__conn = await aiosqlite.connect(self.db_name)
         if where is not None:
             where = await self._validate_params(where)
             selection = await self.__conn.execute(
@@ -50,6 +52,7 @@ class AsyncSession:
         :param values:
         :return:
         """
+        self.__conn = await aiosqlite.connect(self.db_name)
         values = await self._validate_params(values)
         try:
             await self.__conn.execute(f"INSERT INTO {table_name} VALUES ({', '.join(values[0])})")
@@ -66,6 +69,7 @@ class AsyncSession:
         :param where:
         :return:
         """
+        self.__conn = await aiosqlite.connect(self.db_name)
         values, where = await self._validate_params(values, where)
         for k, v in values.items():
             query = f"UPDATE {table_name} SET {k} = {v} WHERE {' AND '.join(f'{q} = {x}' for q, x in where.items())}"
@@ -79,6 +83,7 @@ class AsyncSession:
         :param where:
         :return:
         """
+        self.__conn = await aiosqlite.connect(self.db_name)
         where = await self._validate_params(where)
         await self.__conn.execute(
             f"DELETE FROM {table_name} WHERE {' AND '.join(f'{k} = {v}' for k, v in where[0].items())}")
@@ -89,7 +94,7 @@ class AsyncSession:
         Closes the connection to the database
         :return:
         """
-        await self.__conn.close()
+        return await self.__conn.close()
 
     def __repr__(self):
         return f"<DB: {self.db_name}>"
