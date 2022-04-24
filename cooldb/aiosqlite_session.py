@@ -4,7 +4,7 @@ from typing import List
 import aiosqlite
 
 
-class Session:
+class AsyncSession:
     def __init__(self, db_name: str):
         self.db_name = db_name + ".db" if db_name[-3:] != ".db" else db_name
         self.__conn = aiosqlite.connect(self.db_name)
