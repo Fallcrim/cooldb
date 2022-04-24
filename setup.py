@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '0.0.4'
+VERSION = '1.0.1'
 DESCRIPTION = 'A simple database handler for SQLite3'
 LONG_DESCRIPTION = open(os.path.join(here, 'README.md')).read()
 

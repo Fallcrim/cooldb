@@ -18,7 +18,7 @@ sess = Session('your db name')
 sess.create_table('table name')
 
 # create some data
-sess.insert('the table name', [your values here])
+sess.save('the table name', [your values here])
 sess.update('the table name', {'some column name here': value}, {'your search criteria': value})
 sess.delete('the table name', {'your search criteria': value})
 
