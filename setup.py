@@ -20,7 +20,7 @@ setup(
     install_requires=[],
     keywords=['python', 'db', 'database', 'wrapper', 'sqlite3'],
     classifiers=[
-        "Development Status :: 2 - Alpha",
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
