@@ -18,8 +18,8 @@ class AsyncSession:
         :return:
         """
         self.__conn = await aiosqlite.connect(self.db_name)
-        query = f"CREATE TABLE {table_name} ({', '.join(f'{k} {v}' for k, v in table_columns.items())})"
-        await self.__conn.execute(query)
+        await self.__conn.execute(f"CREATE TABLE ? (?)",
+                                  (table_name, ', '.join(f'{k} {v}' for k, v in table_columns.items())))
         await self.__conn.commit()
         logging.debug(f"Created table {table_name}. No errors.")
         return 0
@@ -39,10 +39,10 @@ class AsyncSession:
         self.__conn = await aiosqlite.connect(self.db_name)
         if where is not None:
             where = await self._validate_params(where)
-            selection = await self.__conn.execute(
-                f"SELECT * FROM {table_name} WHERE {' AND '.join(f'{k} = {v}' for k, v in where[0].items())}")
+            selection = await self.__conn.execute(f"SELECT * FROM ? WHERE ?",
+                                                  (table_name, ' AND '.join(f'{k} = {v}' for k, v in where[0].items())))
         else:
-            selection = await self.__conn.execute(f"SELECT * FROM {table_name}")
+            selection = await self.__conn.execute(f"SELECT * FROM ?", (table_name,))
         return await selection.fetchmany(count)
 
     async def save(self, table_name: str, values: List) -> None:
@@ -55,7 +55,7 @@ class AsyncSession:
         self.__conn = await aiosqlite.connect(self.db_name)
         values = await self._validate_params(values)
         try:
-            await self.__conn.execute(f"INSERT INTO {table_name} VALUES ({', '.join(values[0])})")
+            await self.__conn.execute(f"INSERT INTO ? VALUES (?)", (table_name, ', '.join(values[0])))
             await self.__conn.commit()
         except aiosqlite.IntegrityError as e:
             raise aiosqlite.IntegrityError(
@@ -72,8 +72,8 @@ class AsyncSession:
         self.__conn = await aiosqlite.connect(self.db_name)
         values, where = await self._validate_params(values, where)
         for k, v in values.items():
-            query = f"UPDATE {table_name} SET {k} = {v} WHERE {' AND '.join(f'{q} = {x}' for q, x in where.items())}"
-            await self.__conn.execute(query)
+            await self.__conn.execute(f"UPDATE ? SET ? = ? WHERE ?",
+                                      (table_name, k, v, ' AND '.join(f'{q} = {x}' for q, x in where.items())))
             await self.__conn.commit()
 
     async def delete(self, table_name: str, where: dict[str: str]) -> None:
@@ -86,7 +86,7 @@ class AsyncSession:
         self.__conn = await aiosqlite.connect(self.db_name)
         where = await self._validate_params(where)
         await self.__conn.execute(
-            f"DELETE FROM {table_name} WHERE {' AND '.join(f'{k} = {v}' for k, v in where[0].items())}")
+            f"DELETE FROM ? WHERE ?", (table_name, ' AND '.join(f'{k} = {v}' for k, v in where[0].items())))
         await self.__conn.commit()
 
     async def close(self) -> None:

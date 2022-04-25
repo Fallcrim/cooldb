@@ -17,8 +17,7 @@ class Session:
         :param table_columns:
         :return:
         """
-        query = f"CREATE TABLE {table_name} ({', '.join(f'{k} {v}' for k, v in table_columns.items())})"
-        self.__c.execute(query)
+        self.__c.execute(f"CREATE TABLE ? (?)", (table_name, ', '.join(f'{k} {v}' for k, v in table_columns.items())))
         self.__conn.commit()
         logging.debug(f"Created table {table_name}. No errors.")
         return 0
@@ -43,9 +42,9 @@ class Session:
             where = self._validate_params(where)
         if where is not None:
             self.__c.execute(
-                f"SELECT * FROM {table_name} WHERE {' AND '.join(f'{k} = {v}' for k, v in where[0].items())}")
+                f"SELECT * FROM ? WHERE ?", (table_name, ' AND '.join(f'{k} = {v}' for k, v in where[0].items())))
         else:
-            self.__c.execute(f"SELECT * FROM {table_name}")
+            self.__c.execute(f"SELECT * FROM ?", table_name)
         return self.__c.fetchmany(count)
 
     def save(self, table_name: str, values: List) -> None:
@@ -57,7 +56,7 @@ class Session:
         """
         values = self._validate_params(values)
         try:
-            self.__c.execute(f"INSERT INTO {table_name} VALUES ({', '.join(values[0])})")
+            self.__c.execute(f"INSERT INTO ? VALUES (?)", (table_name, ', '.join(values[0])))
             self.__conn.commit()
         except sqlite3.IntegrityError as e:
             raise sqlite3.IntegrityError("Tried to modify a primary key {}".format(e.__str__()[e.__str__().find(":"):]))
@@ -72,8 +71,7 @@ class Session:
         """
         values, where = self._validate_params(values, where)
         for k, v in values.items():
-            query = f"UPDATE {table_name} SET {k} = {v} WHERE {' AND '.join(f'{q} = {x}' for q, x in where.items())}"
-            self.__c.execute(query)
+            self.__c.execute(f"UPDATE ? SET ? = ? WHERE ?", (table_name, k, v, ' AND '.join(f'{q} = {x}' for q, x in where.items())))
             self.__conn.commit()
 
     def delete(self, table_name: str, where: dict[str: str]) -> None:
@@ -85,7 +83,7 @@ class Session:
         """
         where = self._validate_params(where)
         self.__c.execute(
-            f"DELETE FROM {table_name} WHERE {' AND '.join(f'{k} = {v}' for k, v in where[0].items())}")
+            f"DELETE FROM ? WHERE ?", (table_name, ' AND '.join(f'{k} = {v}' for k, v in where[0].items())))
         self.__conn.commit()
 
     def close(self) -> None:
